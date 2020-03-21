@@ -1,4 +1,4 @@
-const BASEURL = 'https://www.worldometers.info/coronavirus/';
+const BASEURL = 'https://www.worldometers.info/coronavirus';
 module.exports = {
   BASEURL
 };

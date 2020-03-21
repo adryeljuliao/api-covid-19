@@ -1,8 +1,8 @@
 const cheerio = require('cheerio');
-const axios = require('axios');
 const fs = require('fs');
 
-const { BASEURL } = require('../utils/Constants');
+const apiAxios = require('../service/api');
+const { BASEURL } = require('../constants');
 
 function formaterLabels(labels) {
   let labelsFormat = labels.map((item, index) => {
@@ -23,7 +23,7 @@ function formaterLabels(labels) {
 
 async function updateDataCovid() {
   const data = [];
-  await axios.get(BASEURL).then(response => {
+  await apiAxios.get('/').then(response => {
     const $ = cheerio.load(response.data);
     let labelsHead = [];
     $('#main_table_countries_today thead th').each(function() {
@@ -47,4 +47,4 @@ async function updateDataCovid() {
   fs.writeFileSync('../dataset/dataCovid.json', JSON.stringify(data));
 }
 
-module.exports = updateDataCovid();
+module.exports = updateDataCovid;
