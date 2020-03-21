@@ -1,6 +1,6 @@
-const dataset = require('./dataset/covid.json');
 const { Router } = require('express');
 
+const CountryController = require('./controllers/CountryController');
 const routes = new Router();
 
 routes.get('/allCountries', (request, response) => {
@@ -9,22 +9,8 @@ routes.get('/allCountries', (request, response) => {
 
 routes.get('/allData', (req, res) => {
   return res.json(dataset);
-})
+});
 
-routes.get('/countries', (req, res) => {
-  const {country} = req.query
-  
-  const data = dataset.filter( (item) => 
-    country.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-        ==
-    item.country_other.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-  )
-
-  return res.json(data)
-})
+routes.get('/countries', CountryController.show);
 
 module.exports = routes;
