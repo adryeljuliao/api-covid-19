@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { BASEURL } = require('../utils/Constants');
+const { BASEURL } = require('../constants');
 
 const apiAxios = axios.create({
   baseURL: BASEURL
