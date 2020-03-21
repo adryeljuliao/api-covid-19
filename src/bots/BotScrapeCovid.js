@@ -11,21 +11,31 @@ const request = require('request');
 //   }
 // );
 
+function formaterLabels(labels) {
+  let labelsFormat = labels.map((item, index) => {
+    if (index == labels.length - 1) {
+      item = 'cases_to_1m_population';
+      return item;
+    }
+    item = item
+      .replace(',', '')
+      .match(/[A-Z][a-z]+/g)
+      .join(' ')
+      .replace(' ', '_')
+      .toLowerCase();
+    return item;
+  });
+  return labelsFormat;
+}
+
 axios.get('https://www.worldometers.info/coronavirus/').then(response => {
   const $ = cheerio.load(response.data);
   const data = [];
-  const labelsHead = [];
+  let labelsHead = [];
   $('#main_table_countries_today thead th').each(function() {
-    labelsHead.push(
-      $(this)
-        .text()
-        .toLowerCase()
-        .replace(',', '')
-        .replace(/( |\/){1,}/g, '')
-        .trim()
-    );
+    labelsHead.push($(this).text());
   });
-
+  labelsHead = formaterLabels(labelsHead);
   $('#main_table_countries_today tbody tr').each(function(indexRow) {
     let dataCountry = {};
     $(this)
@@ -34,7 +44,8 @@ axios.get('https://www.worldometers.info/coronavirus/').then(response => {
         key = labelsHead[indexColumn];
         dataCountry[key] = $(this)
           .text()
-          .trim();
+          .trim()
+          .replace('+', '');
       });
     data.push(dataCountry);
   });
