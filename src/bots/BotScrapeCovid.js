@@ -51,7 +51,7 @@ async function updateDataCovid() {
     .catch(error => {
       console.log(error);
     });
-  fs.writeFileSync('../dataset/dataCovid.json', JSON.stringify(data));
+  fs.writeFileSync('../dataset/covid.json', JSON.stringify(data));
 }
 
-module.exports = updateDataCovid;
+updateDataCovid();
