@@ -1,15 +1,8 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
-const request = require('request');
+const fs = require('fs');
 
-// request(
-//   'https://www.worldometers.info/coronavirus/',
-//   (error, response, html) => {
-//     if (!error && response.statusCode == 200) {
-//       console.log(html);
-//     }
-//   }
-// );
+const { BASEURL } = require('../utils/Constants');
 
 function formaterLabels(labels) {
   let labelsFormat = labels.map((item, index) => {
@@ -28,26 +21,30 @@ function formaterLabels(labels) {
   return labelsFormat;
 }
 
-axios.get('https://www.worldometers.info/coronavirus/').then(response => {
-  const $ = cheerio.load(response.data);
+async function updateDataCovid() {
   const data = [];
-  let labelsHead = [];
-  $('#main_table_countries_today thead th').each(function() {
-    labelsHead.push($(this).text());
+  await axios.get(BASEURL).then(response => {
+    const $ = cheerio.load(response.data);
+    let labelsHead = [];
+    $('#main_table_countries_today thead th').each(function() {
+      labelsHead.push($(this).text());
+    });
+    labelsHead = formaterLabels(labelsHead);
+    $('#main_table_countries_today tbody tr').each(function(indexRow) {
+      let dataCountry = {};
+      $(this)
+        .find('td')
+        .each(function(indexColumn) {
+          key = labelsHead[indexColumn];
+          dataCountry[key] = $(this)
+            .text()
+            .trim()
+            .replace('+', '');
+        });
+      data.push(dataCountry);
+    });
   });
-  labelsHead = formaterLabels(labelsHead);
-  $('#main_table_countries_today tbody tr').each(function(indexRow) {
-    let dataCountry = {};
-    $(this)
-      .find('td')
-      .each(function(indexColumn) {
-        key = labelsHead[indexColumn];
-        dataCountry[key] = $(this)
-          .text()
-          .trim()
-          .replace('+', '');
-      });
-    data.push(dataCountry);
-  });
-  console.log(data);
-});
+  fs.writeFileSync('../dataset/dataCovid.json', JSON.stringify(data));
+}
+
+module.exports = updateDataCovid();
