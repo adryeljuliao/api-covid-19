@@ -45,6 +45,7 @@ async function updateDataCovid() {
               .trim()
               .replace('+', '');
           });
+        dataCountry['datetime_update'] = new Date();
         data.push(dataCountry);
       });
     })

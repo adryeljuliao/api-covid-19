@@ -10,5 +10,5 @@
 // * * * * * * command to execute
 
 module.exports = {
-  updateCoronaJob: '* */30 * * * *'
+  updateCoronaJob: '0 */30 * * * *'
 };
