@@ -16,9 +16,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: git pull
       - run: npm install
       - run: node src/bots/index.js
-      - run: git status
       - uses: EndBug/add-and-commit@v4
         with:
           author_name: Adryel Julião
