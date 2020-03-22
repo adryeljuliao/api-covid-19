@@ -1,6 +1,13 @@
 const dataset = require('../dataset/covid.json');
 
 module.exports = {
+  async index(req, res, next) {
+    const { country } = req.query;
+    if (country) {
+      return next();
+    }
+    return res.json(dataset);
+  },
   async show(req, res) {
     const { country } = req.query;
     if (!country) {
