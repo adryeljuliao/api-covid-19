@@ -3,7 +3,10 @@ name: Update data covid19
 on:
   push:
     branches:
-    - dev
+    - master
+  schedule:
+  - cron: "0 * * * *"
+  
 
 jobs:
   scraping:
