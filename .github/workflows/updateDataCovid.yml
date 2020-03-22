@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
+    - run: npm install yarn -g && yarn
     - run: node src/bots/index.js
     - run: git status    
     - uses: EndBug/add-and-commit@v4 
