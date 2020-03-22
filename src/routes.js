@@ -1,11 +1,8 @@
 const { Router } = require('express');
 
-const CountryController = require('./controllers/CountryController');
 const routes = new Router();
 
-routes.get('/allCountries', (request, response) => {
-  return response.json({ msg: 'ok Pedro humilde' });
-});
+const CountryController = require('./controllers/CountryController');
 
 routes.get('/allData', (req, res) => {
   return res.json(dataset);
