@@ -3,30 +3,29 @@ name: Update data covid19
 on:
   push:
     branches:
-    - master
+      - master
   schedule:
-  - cron: "0 * * * *"
-  
+    - cron: '0 * * * *'
 
 jobs:
   scraping:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install yarn -g && yarn
-    - run: node src/bots/index.js
-    - run: git status    
-    - uses: EndBug/add-and-commit@v4 
-      with:
-        author_name: Adryel Julião
-        author_email: adryel.juliao1@gmail.com
-        force: false
-        message: 'Update data covid19'
-    - run: git push 
-        
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: node src/bots/index.js
+      - run: git status
+      - uses: EndBug/add-and-commit@v4
+        with:
+          author_name: Adryel Julião
+          author_email: adryel.juliao1@gmail.com
+          force: false
+          message: 'Update data covid19'
+      - run: git push
+
     env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
