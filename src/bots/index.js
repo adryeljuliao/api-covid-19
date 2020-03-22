@@ -58,4 +58,4 @@ async function updateDataCovid() {
   );
 }
 
-module.exports = updateDataCovid;
+updateDataCovid();
