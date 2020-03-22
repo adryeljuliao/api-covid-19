@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 const fs = require('fs');
-
+const path = require('path');
 const apiAxios = require('../service/api');
 
 function formatLabels(labels) {
@@ -45,13 +45,17 @@ async function updateDataCovid() {
               .trim()
               .replace('+', '');
           });
+        dataCountry['datetime_update'] = new Date();
         data.push(dataCountry);
       });
     })
     .catch(error => {
       console.log(error);
     });
-  fs.writeFileSync('../dataset/covid.json', JSON.stringify(data));
+  fs.writeFileSync(
+    path.join(__dirname, '..', '/dataset/covid.json'),
+    JSON.stringify(data)
+  );
 }
 
-updateDataCovid();
+module.exports = updateDataCovid;

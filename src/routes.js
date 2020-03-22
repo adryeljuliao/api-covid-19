@@ -1,16 +1,10 @@
 const { Router } = require('express');
 
-const CountryController = require('./controllers/CountryController');
 const routes = new Router();
 
-routes.get('/allCountries', (request, response) => {
-  return response.json({ msg: 'ok Pedro humilde' });
-});
+const CountryController = require('./controllers/CountryController');
 
-routes.get('/allData', (req, res) => {
-  return res.json(dataset);
-});
-
-routes.get('/countries', CountryController.show);
+routes.get('/countries', CountryController.index);
+routes.get('/countries/:country', CountryController.show);
 
 module.exports = routes;
