@@ -1,7 +1,10 @@
 const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
+const shell = require('shelljs');
+
 const apiAxios = require('../service/api');
+const dateControlDataset = require('../dataset/timestamp.json');
 
 function formatLabels(labels) {
   let labelsFormat = labels.map((item, index) => {
@@ -21,7 +24,27 @@ function formatLabels(labels) {
 }
 
 async function updateDataCovid() {
+  const { timestamp } = dateControlDataset;
   const data = [];
+  const dateCurrent = new Date();
+  const fullYear = `${dateCurrent.getFullYear()}`;
+  const month = `${String(dateCurrent.getMonth() + 1).padStart(2, '0')}`;
+  const day = `${String(dateCurrent.getDate()).padStart(2, '0')}`;
+  const hour = `${String(dateCurrent.getHours()).padStart(2, '0')}h`;
+
+  const dateControl = new Date(timestamp);
+
+  if (dateControl.getDate() != dateCurrent.getDate()) {
+    const nameDir = `dataset_${fullYear}_${month}_${day}`;
+
+    const newDir = `src/dataset/${nameDir}`;
+    shell.mkdir(`${newDir}`);
+    shell.mv('src/dataset/datasetcovid*.json', `${newDir}`);
+    fs.writeFileSync(
+      path.join(__dirname, '..', `dataset/date_current.json`),
+      JSON.stringify({ timestamp: dateCurrent.getTime() })
+    );
+  }
   await apiAxios
     .get('/')
     .then(response => {
@@ -45,15 +68,25 @@ async function updateDataCovid() {
               .trim()
               .replace('+', '');
           });
-        dataCountry['datetime_update'] = new Date();
+        dataCountry['timestamp_at'] = dateCurrent;
         data.push(dataCountry);
       });
     })
     .catch(error => {
       console.log(error);
     });
+
   fs.writeFileSync(
-    path.join(__dirname, '..', '/dataset/covid.json'),
+    path.join(
+      __dirname,
+      '..',
+      `dataset/datasetcovid_${fullYear}_${month}_${day}_${hour}.json`
+    ),
+    JSON.stringify(data)
+  );
+
+  fs.writeFileSync(
+    path.join(__dirname, '..', `dataset/covidapi.json`),
     JSON.stringify(data)
   );
 }
