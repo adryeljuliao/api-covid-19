@@ -1,4 +1,4 @@
-const dataset = require('../dataset/covid.json');
+const dataset = require('../dataset/covidapi.json');
 
 module.exports = {
   async index(req, res) {
