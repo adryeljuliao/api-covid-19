@@ -27,14 +27,18 @@ async function updateDataCovid() {
   const { timestamp } = dateControlDataset;
   const data = [];
   const dateCurrent = new Date();
-  const fullYear = `${dateCurrent.getFullYear()}`;
-  const month = `${String(dateCurrent.getMonth() + 1).padStart(2, '0')}`;
-  const day = `${String(dateCurrent.getDate()).padStart(2, '0')}`;
-  const hour = `${String(dateCurrent.getHours()).padStart(2, '0')}h`;
+  const fullYearCurrent = `${dateCurrent.getFullYear()}`;
+  const monthCurrent = `${String(dateCurrent.getMonth() + 1).padStart(2, '0')}`;
+  const dayCurrent = `${String(dateCurrent.getDate()).padStart(2, '0')}`;
+  const hourCurrent = `${String(dateCurrent.getHours()).padStart(2, '0')}h`;
 
   const dateControl = new Date(timestamp);
 
   if (dateControl.getDate() != dateCurrent.getDate()) {
+    const fullYear = `${dateControl.getFullYear()}`;
+    const month = `${String(dateControl.getMonth() + 1).padStart(2, '0')}`;
+    const day = `${String(dateControl.getDate()).padStart(2, '0')}`;
+
     const nameDir = `dataset_${fullYear}_${month}_${day}`;
 
     const newDir = `src/dataset/${nameDir}`;
@@ -68,7 +72,7 @@ async function updateDataCovid() {
               .trim()
               .replace('+', '');
           });
-        dataCountry['timestamp_at'] = dateCurrent;
+        dataCountry['timestamp_at'] = dateCurrent.getTime();
         data.push(dataCountry);
       });
     })
@@ -80,7 +84,7 @@ async function updateDataCovid() {
     path.join(
       __dirname,
       '..',
-      `dataset/datasetcovid_${fullYear}_${month}_${day}_${hour}.json`
+      `dataset/datasetcovid_${fullYearCurrent}_${monthCurrent}_${dayCurrent}_${hourCurrent}.json`
     ),
     JSON.stringify(data)
   );
