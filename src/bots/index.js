@@ -30,22 +30,20 @@ async function updateDataCovid() {
   const fullYearCurrent = `${dateCurrent.getFullYear()}`;
   const monthCurrent = `${String(dateCurrent.getMonth() + 1).padStart(2, '0')}`;
   const dayCurrent = `${String(dateCurrent.getDate()).padStart(2, '0')}`;
-  const hourCurrent = `${String(dateCurrent.getHours()).padStart(2, '0')}h`;
 
   const dateControl = new Date(timestamp);
-
   if (dateControl.getDate() != dateCurrent.getDate()) {
+
     const fullYear = `${dateControl.getFullYear()}`;
     const month = `${String(dateControl.getMonth() + 1).padStart(2, '0')}`;
-    const day = `${String(dateControl.getDate()).padStart(2, '0')}`;
-
-    const nameDir = `dataset_${fullYear}_${month}_${day}`;
+    
+    const nameDir = `dataset_${fullYear}${month}`;
 
     const newDir = `src/dataset/${nameDir}`;
     shell.mkdir(`${newDir}`);
     shell.mv('src/dataset/datasetcovid*.json', `${newDir}`);
     fs.writeFileSync(
-      path.join(__dirname, '..', `dataset/date_current.json`),
+      path.join(__dirname, '..', `dataset/timestamp.json`),
       JSON.stringify({ timestamp: dateCurrent.getTime() })
     );
   }
@@ -84,7 +82,7 @@ async function updateDataCovid() {
     path.join(
       __dirname,
       '..',
-      `dataset/datasetcovid_${fullYearCurrent}_${monthCurrent}_${dayCurrent}_${hourCurrent}.json`
+      `dataset/datasetcovid_${fullYearCurrent}${monthCurrent}${dayCurrent}.json`
     ),
     JSON.stringify(data)
   );
