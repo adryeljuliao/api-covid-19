@@ -7,18 +7,21 @@ const apiAxios = require('../service/api');
 const dateControlDataset = require('../dataset/timestamp.json');
 
 function formatLabels(labels) {
-  let labelsFormat = labels.map((item, index) => {
-    if (index == labels.length - 1) {
-      item = 'cases_to_1m_population';
-      return item;
+  let labelsFormat = labels.map((tHeadLabel, index) => {
+
+    const label = tHeadLabel.trim().replace(/,/g, '_').replace('/',' ').replace(/\s\s+/g, ' ').replace(/\s+/g, '_').replace('1M', 'one_million');
+    const indexLabelWithUnderscore = label.indexOf('_');
+    if(indexLabelWithUnderscore == -1) {
+      if(label.match(/[A-Z][a-z]+/g)) {
+        tHeadLabel = label.match(/[A-Z][a-z]+/g)
+        .join(' ')
+        .replace(' ', '_')
+        .toLowerCase();
+      }
+      return tHeadLabel;
     }
-    item = item
-      .replace(',', '')
-      .match(/[A-Z][a-z]+/g)
-      .join(' ')
-      .replace(' ', '_')
-      .toLowerCase();
-    return item;
+          
+    return label.toLowerCase();
   });
   return labelsFormat;
 }
@@ -57,7 +60,7 @@ async function updateDataCovid() {
       });
 
       labelsHead = formatLabels(labelsHead);
-
+      console.log(labelsHead)
       $('#main_table_countries_today tbody tr').each(function() {
         let dataCountry = {};
 
